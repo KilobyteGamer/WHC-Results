@@ -3,120 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Witham Hockey Live Scores</title>
+    <title>Witham HC | Live Scoreboard</title>
     <style>
-        :root { --witham-green: #004d2c; --witham-gold: #ffcc00; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #ececec; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        h1 { color: var(--witham-green); text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
-        
-        .scoreboard-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 1200px; }
-        
-        .card { background: white; border-radius: 12px; width: 300px; padding: 20px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-top: 6px solid var(--witham-green); position: relative; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
+        :root {
+            --witham-green: #004d2c;
+            --witham-gold: #ffcc00;
+            --bg-gray: #f0f2f5;
+        }
 
-        .live-badge { position: absolute; top: 10px; right: 10px; background: #ff0000; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; animation: blink 1s infinite; }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            padding: 20px;
+            color: #1c1e21;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 4px solid var(--witham-green);
+            padding-bottom: 10px;
+        }
+
+        h1 { color: var(--witham-green); margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Main Grid Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 300px; /* Three columns */
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .column-title {
+            font-size: 1.2rem;
+            color: var(--witham-green);
+            border-bottom: 2px solid var(--witham-green);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 800;
+        }
+
+        /* Responsive: Stack columns on smaller screens */
+        @media (max-width: 1000px) {
+            .main-container { grid-template-columns: 1fr; }
+            .info-column { order: -1; } /* Clock/Weather at top on mobile */
+        }
+
+        /* Card Styling */
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--witham-green);
+            position: relative;
+        }
+
+        .live-badge {
+            position: absolute; top: 10px; right: 10px;
+            background: #d93025; color: white;
+            padding: 2px 8px; border-radius: 4px;
+            font-size: 0.7rem; font-weight: bold; animation: blink 1s infinite;
+        }
         @keyframes blink { 50% { opacity: 0; } }
 
-        .division { font-size: 0.75rem; color: #777; font-weight: bold; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .team-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; }
-        .team-name { font-weight: 600; color: #333; font-size: 1.05rem; flex: 1; }
-        .score { background: #333; color: white; padding: 6px 12px; border-radius: 6px; font-size: 1.2rem; font-weight: bold; min-width: 25px; text-align: center; }
+        .team-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 1rem; }
+        .score { font-weight: 800; font-size: 1.2rem; width: 30px; text-align: center; background: #f8f9fa; border-radius: 4px; }
+        .status-bar { font-size: 0.8rem; text-align: center; margin-top: 10px; color: #65676b; font-weight: 600; text-transform: uppercase; }
 
-        .status-footer { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ddd; text-align: center; font-weight: bold; font-size: 0.9rem; }
-        .status-tbd { color: #666; }
-        .status-win { color: #28a745; }
-        .status-loss { color: #dc3545; }
-        .status-cancelled { color: #999; font-style: italic; }
+        /* Right Column Widgets */
+        .widget {
+            background: white; border-radius: 8px; padding: 20px;
+            margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            text-align: center;
+        }
 
-        #debug-log { margin-top: 40px; font-size: 10px; color: #888; font-family: monospace; background: #fff; padding: 10px; border-radius: 5px; width: 80%; max-width: 600px; border: 1px solid #ddd; }
+        #clock { font-size: 2rem; font-weight: bold; color: var(--witham-green); }
+        #date { font-size: 1rem; color: #65676b; margin-bottom: 10px; }
+
+        .ad-placeholder {
+            background: #e4e6eb; border: 2px dashed #b0b3b8;
+            height: 250px; display: flex; align-items: center;
+            justify-content: center; color: #65676b; font-style: italic;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Witham Hockey Club Results</h1>
-    
-    <div id="scoreboard" class="scoreboard-container">
-        <p>Loading matches...</p>
+<header>
+    <h1>Witham Hockey Club | Match Centre</h1>
+</header>
+
+<div class="main-container">
+    <div class="column">
+        <div class="column-title">MENS SECTION</div>
+        <div id="mens-scores">Loading...</div>
     </div>
 
-    <div id="debug-log">Log initialized...</div>
+    <div class="column">
+        <div class="column-title">LADIES SECTION</div>
+        <div id="ladies-scores">Loading...</div>
+    </div>
 
-    <script>
-        // PASTE YOUR NEW WEB APP URL HERE
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbycpvfVi8Yd3Us0Fp84SON-wyxN0NL6b_3adE-cnYoomk0Cb0IsuPt2tF9RjdScB_TN/exec';
+    <div class="info-column">
+        <div class="widget">
+            <div id="clock">00:00</div>
+            <div id="date">Date</div>
+            <hr>
+            <a class="weatherwidget-io" href="https://forecast7.com/en/51_800_0_64/witham/" data-label_1="WITHAM" data-label_2="WEATHER" data-theme="pure" >WITHAM WEATHER</a>
+            <script>
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+            </script>
+        </div>
 
-        const log = (msg) => {
-            document.getElementById('debug-log').innerHTML += `<br>> ${msg}`;
-        };
+        <div class="widget">
+            <div class="column-title" style="font-size: 0.9rem;">UPCOMING EVENTS</div>
+            <div class="ad-placeholder">
+                <p>Space for Adverts / <br>Upcoming Events</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-        // This is the function the Google Script calls back to
-        function handleData(data) {
-            log("Data received from Google! Rendering...");
-            const container = document.getElementById('scoreboard');
-            container.innerHTML = '';
+<div id="debug-log" style="display:none;"></div>
 
-            // Grid structure: Row 0=Display?, 1=PB, 2=Status, 3=Team1, 4=Team2, 5=Score1, 6=Score2, 7=Div
-            for (let col = 0; col < 7; col++) {
-                const showMatch = data[0][col];
-                if (showMatch !== true && showMatch !== "TRUE") continue;
+<script>
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbycpvfVi8Yd3Us0Fp84SON-wyxN0NL6b_3adE-cnYoomk0Cb0IsuPt2tF9RjdScB_TN/exec';
 
-                const pb = data[1][col];
-                const status = data[2][col];
-                const team1 = data[3][col];
-                const team2 = data[4][col];
-                const s1 = data[5][col] ?? '-';
-                const s2 = data[6][col] ?? '-';
-                const div = data[7][col];
+    function updateDateTime() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('date').textContent = now.toLocaleDateString([], {weekday: 'long', day: 'numeric', month: 'long'});
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
 
-                // Logic for "Live" Indicator
-                let isLive = false;
-                if (status === "TBD") {
-                    const now = new Date();
-                    const [hrs, mins] = pb.split(':');
-                    const matchTime = new Date();
-                    matchTime.setHours(hrs, mins, 0);
-                    const endTime = new Date(matchTime.getTime() + (90 * 60000));
-                    if (now >= matchTime && now <= endTime) isLive = true;
-                }
+    function handleData(data) {
+        const mensContainer = document.getElementById('mens-scores');
+        const ladiesContainer = document.getElementById('ladies-scores');
+        mensContainer.innerHTML = '';
+        ladiesContainer.innerHTML = '';
 
-                const isSpecial = ["Cancelled", "Abandoned", "Postponed"].includes(status);
+        for (let col = 0; col < 7; col++) {
+            const showMatch = data[0][col];
+            if (showMatch !== true && showMatch !== "TRUE") continue;
 
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-                    <div class="division">${div}</div>
-                    <div class="team-row">
-                        <span class="team-name">${team1}</span>
-                        <span class="score">${isSpecial ? '-' : s1}</span>
-                    </div>
-                    <div class="team-row">
-                        <span class="team-name">${team2}</span>
-                        <span class="score">${isSpecial ? '-' : s2}</span>
-                    </div>
-                    <div class="status-footer status-${status.toLowerCase()}">
-                        ${status === 'TBD' ? 'Pushback: ' + pb : status}
-                    </div>
-                `;
-                container.appendChild(card);
+            const pb = data[1][col];
+            const status = data[2][col];
+            const team1 = data[3][col];
+            const team2 = data[4][col];
+            const s1 = data[5][col] ?? '-';
+            const s2 = data[6][col] ?? '-';
+            const div = data[7][col];
+
+            // Determine if team is Ladies (L) or Mens (M)
+            const isLadies = team1.toLowerCase().includes(' L') || team1.includes('Ladies');
+
+            let isLive = false;
+            if (status === "TBD") {
+                const now = new Date();
+                const [hrs, mins] = pb.split(':');
+                const matchTime = new Date();
+                matchTime.setHours(hrs, mins, 0);
+                const endTime = new Date(matchTime.getTime() + (90 * 60000));
+                if (now >= matchTime && now <= endTime) isLive = true;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+                <div class="division">${div}</div>
+                <div class="team-row"><span>${team1}</span><span class="score">${status === 'Cancelled' ? '-' : s1}</span></div>
+                <div class="team-row"><span>${team2}</span><span class="score">${status === 'Cancelled' ? '-' : s2}</span></div>
+                <div class="status-bar">${status === 'TBD' ? 'PB: ' + pb : status}</div>
+            `;
+
+            if (isLadies) {
+                ladiesContainer.appendChild(card);
+            } else {
+                mensContainer.appendChild(card);
             }
         }
+    }
 
-        function refreshData() {
-            log("Requesting data...");
-            const oldScript = document.getElementById('data-script');
-            if (oldScript) oldScript.remove();
+    function refreshData() {
+        const oldScript = document.getElementById('data-script');
+        if (oldScript) oldScript.remove();
+        const script = document.createElement('script');
+        script.id = 'data-script';
+        script.src = `${WEB_APP_URL}?callback=handleData&ts=${Date.now()}`;
+        document.body.appendChild(script);
+    }
 
-            const script = document.createElement('script');
-            script.id = 'data-script';
-            script.src = `${WEB_APP_URL}?callback=handleData&ts=${Date.now()}`;
-            document.body.appendChild(script);
-        }
-
-        // Run on load
-        refreshData();
-        // Refresh every 60 seconds
-        setInterval(refreshData, 60000);
-    </script>
+    refreshData();
+    setInterval(refreshData, 60000);
+</script>
 </body>
 </html>
