@@ -6,9 +6,8 @@
     <title>Witham HC | Match Centre</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 1. RESET & BOX MODEL FIX */
         * {
-            box-sizing: border-box; /* Ensures padding doesn't add to width */
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
@@ -23,11 +22,10 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-light);
             color: var(--witham-black);
-            overflow-x: hidden; /* Prevent any horizontal stray movement */
+            overflow-x: hidden;
             width: 100vw;
         }
 
-        /* 2. HEADER */
         header {
             display: flex;
             justify-content: space-between;
@@ -52,26 +50,22 @@
         #clock { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; line-height: 1; }
         #date { font-size: 0.8rem; font-weight: 800; color: #666; text-transform: uppercase; }
 
-        /* 3. MAIN CONTAINER & GRID FIX */
         .main-container {
             display: grid;
             grid-template-columns: 1.1fr 1.1fr 0.8fr;
             gap: 20px;
             padding: 20px;
             width: 100%;
-            max-width: 100%; /* Prevents overflow */
+            max-width: 100%;
         }
 
-        /* Responsive Breakpoint */
         @media (max-width: 1024px) {
             .main-container {
-                grid-template-columns: 1fr; /* Stack everything on mobile */
+                grid-template-columns: 1fr;
                 padding: 15px;
             }
-            .header-title h1 { font-size: 1.2rem; }
         }
 
-        /* 4. FIXTURE CARDS */
         .column-title {
             margin-bottom: 15px;
             padding-bottom: 10px;
@@ -91,7 +85,7 @@
             margin-bottom: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             border-left: 10px solid var(--witham-gold);
-            width: 100%; /* Strict width control */
+            width: 100%;
         }
 
         .card-header-row {
@@ -112,12 +106,13 @@
         }
         @keyframes slowBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* 5. TEAM & SCORE EMPHASIS */
+        /* SCORE ROW & TRUNCATION FIX */
         .score-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
+            gap: 12px;
+            width: 100%;
         }
 
         .team-name { 
@@ -125,8 +120,13 @@
             font-size: 1.4rem; 
             color: #000; 
             flex: 1; 
-            line-height: 1.1; 
-            overflow-wrap: anywhere; /* Prevents long names from pushing card width */
+            line-height: 1.2;
+            
+            /* TRUNCATION LOGIC */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0; /* Required for ellipsis to work in flexbox */
         }
         .team-name.home { text-align: right; }
 
@@ -140,7 +140,7 @@
             border-radius: 50px;
             min-width: 85px;
             text-align: center;
-            flex-shrink: 0; /* Prevents score from squishing */
+            flex-shrink: 0; 
         }
 
         .status-footer { 
@@ -152,7 +152,6 @@
             text-transform: uppercase;
         }
 
-        /* 6. WIDGETS */
         .weather-card {
             background: white;
             border-radius: 12px;
@@ -215,7 +214,6 @@
 <script>
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbycpvfVi8Yd3Us0Fp84SON-wyxN0NL6b_3adE-cnYoomk0Cb0IsuPt2tF9RjdScB_TN/exec';
 
-    // Weather Logic
     async function updateWeather() {
         try {
             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=51.8033&longitude=0.6386&current_weather=true&timezone=Europe%2FLondon`);
@@ -239,7 +237,6 @@
     }
     updateWeather(); setInterval(updateWeather, 600000);
 
-    // Carousel
     let currentSlide = 0;
     setInterval(() => {
         const slides = document.querySelectorAll('.carousel-slide');
@@ -249,7 +246,6 @@
         slides[currentSlide].classList.add('active');
     }, 5000);
 
-    // Clock
     function updateClock() {
         const now = new Date();
         document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -257,7 +253,6 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // Data handling
     function handleData(data) {
         const mens = document.getElementById('mens-scores');
         const ladies = document.getElementById('ladies-scores');
@@ -284,9 +279,9 @@
                     ${isPlaying ? '<div class="live-badge">Playing</div>' : '<div></div>'}
                 </div>
                 <div class="score-row">
-                    <div class="team-name home">${team1}</div>
+                    <div class="team-name home" title="${team1}">${team1}</div>
                     <div class="score-pod">${status.includes('Post') || status.includes('Canc') ? '-' : s1 + ' - ' + s2}</div>
-                    <div class="team-name">${team2}</div>
+                    <div class="team-name" title="${team2}">${team2}</div>
                 </div>
                 <div class="status-footer">${status === 'TBD' ? 'Pushback: ' + pb : status}</div>
             `;
