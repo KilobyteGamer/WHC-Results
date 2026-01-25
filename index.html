@@ -6,11 +6,7 @@
     <title>Witham HC | Match Centre</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
             --witham-gold: #ffc000;
@@ -23,151 +19,122 @@
             background-color: var(--bg-light);
             color: var(--witham-black);
             overflow-x: hidden;
-            width: 100vw;
+            width: 100%;
         }
 
+        /* HEADER - LARGE FLUID TITLE */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: white;
-            padding: 10px 15px;
+            padding: 15px 20px;
             border-bottom: 6px solid var(--witham-gold);
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             width: 100%;
         }
 
-        .header-logo img { height: 60px; width: auto; }
+        .header-logo img { height: clamp(55px, 7vw, 90px); width: auto; }
+        
+        .header-title { flex-grow: 1; text-align: center; padding: 0 10px; }
+
         .header-title h1 {
             font-family: 'Montserrat', sans-serif;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: -1px;
-            font-size: 1.5rem;
+            letter-spacing: -2px;
+            font-size: clamp(1.8rem, 5vw, 3.5rem); 
+            color: var(--witham-black);
+            line-height: 0.9;
         }
 
-        .header-clock { text-align: right; display: flex; flex-direction: column; }
-        #clock { font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 900; line-height: 1; }
-        #date { font-size: 0.8rem; font-weight: 800; color: #666; text-transform: uppercase; }
+        .header-clock { text-align: right; flex-shrink: 0; min-width: 80px; }
+        #clock { font-family: 'Montserrat', sans-serif; font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 900; line-height: 1; }
+        #date { font-size: 0.75rem; font-weight: 800; color: #666; text-transform: uppercase; display: block; margin-top: 2px; }
 
+        /* GRID SYSTEM */
         .main-container {
             display: grid;
-            grid-template-columns: 1.1fr 1.1fr 0.8fr;
-            gap: 20px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 25px;
             width: 100%;
-            max-width: 100%;
         }
 
-        @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                padding: 15px;
-            }
+        @media (min-width: 1200px) {
+            .main-container { grid-template-columns: 1.1fr 1.1fr 0.8fr; }
         }
 
         .column-title {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 5px solid var(--witham-gold);
         }
-        .column-title h2 { 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: 1.5rem; 
-            text-transform: uppercase;
-            font-weight: 900;
-        }
+        .column-title h2 { font-family: 'Montserrat', sans-serif; font-size: 1.7rem; text-transform: uppercase; font-weight: 900; letter-spacing: -1px; }
 
-        .card {
+        /* CARDS */
+        .card, .weather-card, .news-card {
             background: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 22px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            border-left: 10px solid var(--witham-gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             width: 100%;
         }
+        .card { border-left: 10px solid var(--witham-gold); }
 
-        .card-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+        .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .division { font-size: 0.85rem; color: #777; font-weight: 900; text-transform: uppercase; }
 
-        .division { font-size: 0.8rem; color: #777; font-weight: 900; text-transform: uppercase; }
-
+        /* LIVE BADGE STYLE */
         .live-badge {
             background: #d93025; color: white;
-            padding: 4px 10px; border-radius: 20px;
+            padding: 4px 12px; border-radius: 20px;
             font-size: 0.75rem; font-weight: 900;
             text-transform: uppercase;
             animation: slowBreathe 3s ease-in-out infinite;
         }
         @keyframes slowBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* SCORE ROW & TRUNCATION FIX */
+        /* TEAMS & SCORES */
         .score-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            width: 100%;
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; width: 100%;
         }
 
         .team-name { 
-            font-weight: 800; 
-            font-size: 1.4rem; 
-            color: #000; 
-            flex: 1; 
-            line-height: 1.2;
-            
-            /* TRUNCATION LOGIC */
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-width: 0; /* Required for ellipsis to work in flexbox */
+            font-weight: 800; font-size: clamp(1.1rem, 4vw, 1.5rem); 
+            color: #000; flex: 1; line-height: 1.1; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
         }
         .team-name.home { text-align: right; }
 
         .score-pod {
-            background: var(--witham-gold);
-            color: var(--witham-black);
+            background: var(--witham-gold); color: var(--witham-black);
             font-family: 'Montserrat', sans-serif;
-            font-size: 2rem; 
-            font-weight: 900;
-            padding: 6px 15px;
-            border-radius: 50px;
-            min-width: 85px;
-            text-align: center;
-            flex-shrink: 0; 
+            font-size: clamp(1.8rem, 5vw, 2.2rem); 
+            font-weight: 900; padding: 6px 18px;
+            border-radius: 50px; min-width: 85px;
+            text-align: center; flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .status-footer { 
-            font-size: 1.05rem; 
-            font-weight: 800; 
-            text-align: center; 
-            margin-top: 15px; 
-            color: #333; 
-            text-transform: uppercase;
+            font-size: 1.1rem; font-weight: 800; text-align: center; 
+            margin-top: 18px; color: #333; text-transform: uppercase;
         }
 
-        .weather-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid #eee;
-        }
-        .weather-main { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 10px 0; }
-        .weather-temp { font-size: 2.8rem; font-weight: 900; font-family: 'Montserrat'; }
-        .weather-icon { font-size: 2.8rem; }
-        
+        /* WEATHER */
+        .weather-desc { font-weight: 800; text-transform: uppercase; color: #666; font-size: 0.95rem; margin-bottom: 5px; display: block; text-align: center; }
+        .weather-main { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 5px 0 12px 0; }
+        .weather-temp { font-size: 3rem; font-weight: 900; font-family: 'Montserrat'; }
+        .weather-icon { font-size: 3rem; }
+
+        /* NEWS CAROUSEL */
         .carousel-container {
-            width: 100%; height: 280px;
+            width: 100%; height: 300px;
             position: relative; border-radius: 8px;
-            overflow: hidden; background: #eee;
-            margin-top: 15px;
+            overflow: hidden; background: #fff;
         }
         .carousel-slide {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -176,7 +143,7 @@
             display: flex; align-items: flex-end;
         }
         .carousel-slide.active { opacity: 1; }
-        .slide-caption { background: rgba(0,0,0,0.7); color: white; padding: 10px; width: 100%; text-align: center; font-weight: 600; }
+        .slide-caption { background: rgba(0,0,0,0.7); color: white; padding: 12px; width: 100%; text-align: center; font-weight: 600; font-size: 1rem; }
     </style>
 </head>
 <body>
@@ -199,13 +166,12 @@
     <div class="column">
         <div class="column-title"><h2>Weather</h2></div>
         <div id="weather-container"></div>
-        <div class="column-title" style="margin-top: 30px;"><h2>Club News</h2></div>
-        <div class="carousel-container" id="carousel">
-            <div class="carousel-slide active" style="background-image: url('https://raw.githubusercontent.com/KilobyteGamer/WHC-Results/refs/heads/main/WHC_Eagle.png'); background-color: #fff;">
-                <div class="slide-caption">Witham Hockey Club</div>
-            </div>
-            <div class="carousel-slide" style="background-image: url('https://via.placeholder.com/400x300/ffc000/000000?text=Social+Events');">
-                <div class="slide-caption">Check the Facebook Group for Socials</div>
+        <div class="column-title" style="margin-top: 25px;"><h2>Club News</h2></div>
+        <div class="news-card">
+            <div class="carousel-container" id="carousel">
+                <div class="carousel-slide active" style="background-image: url('https://raw.githubusercontent.com/KilobyteGamer/WHC-Results/refs/heads/main/WHC_Eagle.png');">
+                    <div class="slide-caption">Welcome to Witham Hockey Club</div>
+                </div>
             </div>
         </div>
     </div>
@@ -217,34 +183,24 @@
     async function updateWeather() {
         try {
             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=51.8033&longitude=0.6386&current_weather=true&timezone=Europe%2FLondon`);
-            const data = await res.json();
-            const w = data.current_weather;
+            const d = await res.json();
+            const w = d.current_weather;
             const icons = { 0: '☀️', 1: '⛅', 2: '⛅', 3: '☁️', 45: '☁️', 48: '☁️', 51: '🌧️', 61: '🌧️', 80: '🌦️' };
-            const descs = { 0: 'Clear', 1: 'Fair', 2: 'Cloudy', 3: 'Overcast', 61: 'Rain' };
-            
+            const descs = { 0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast', 61: 'Rainy' };
             document.getElementById('weather-container').innerHTML = `
                 <div class="weather-card">
-                    <span style="font-weight:800; text-transform:uppercase; color:#666;">${descs[w.weathercode] || 'Mostly Cloudy'}</span>
+                    <span class="weather-desc">${descs[w.weathercode] || 'Cloudy'}</span>
                     <div class="weather-main">
                         <span class="weather-icon">${icons[w.weathercode] || '☁️'}</span>
                         <span class="weather-temp">${Math.round(w.temperature)}°C</span>
                     </div>
-                    <div style="font-size:0.9rem; font-weight:700; color:#888; border-top:1px solid #eee; padding-top:10px;">
-                        Wind: ${Math.round(w.windspeed * 0.621)} mph | Witham
+                    <div style="font-size:0.95rem; font-weight:800; color:#888; border-top:1px solid #eee; padding-top:12px; text-align:center; text-transform:uppercase;">
+                        Witham | ${Math.round(w.windspeed * 0.621)} mph Wind
                     </div>
                 </div>`;
-        } catch (e) { console.error(e); }
+        } catch (e) {}
     }
     updateWeather(); setInterval(updateWeather, 600000);
-
-    let currentSlide = 0;
-    setInterval(() => {
-        const slides = document.querySelectorAll('.carousel-slide');
-        if(slides.length < 2) return;
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide + 1) % slides.length;
-        slides[currentSlide].classList.add('active');
-    }, 5000);
 
     function updateClock() {
         const now = new Date();
@@ -257,20 +213,21 @@
         const mens = document.getElementById('mens-scores');
         const ladies = document.getElementById('ladies-scores');
         mens.innerHTML = ''; ladies.innerHTML = '';
-
+        
         for (let col = 0; col < 7; col++) {
             if (data[0][col] !== true && data[0][col] !== "TRUE") continue;
-            const [pb, status, team1, team2, s1, s2, div] = [data[1][col], data[2][col], data[3][col], data[4][col], data[5][col] ?? '0', data[6][col] ?? '0', data[7][col]];
-            const isLadies = team1.toLowerCase().includes(' l') || team1.includes('Ladies');
+            const [pb, status, t1, t2, s1, s2, div] = [data[1][col], data[2][col], data[3][col], data[4][col], data[5][col] ?? '0', data[6][col] ?? '0', data[7][col]];
             
+            // Logic for Live Playing Badge
             let isPlaying = false;
-            if (status === "TBD") {
+            if (status === "TBD" && pb) {
                 const now = new Date();
                 const [hrs, mins] = pb.split(':');
                 const mt = new Date(); mt.setHours(hrs, mins, 0);
                 if (now >= mt && now <= new Date(mt.getTime() + 5400000)) isPlaying = true;
             }
 
+            const isLadies = t1.toLowerCase().includes(' l') || t1.includes('Ladies');
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
@@ -279,9 +236,9 @@
                     ${isPlaying ? '<div class="live-badge">Playing</div>' : '<div></div>'}
                 </div>
                 <div class="score-row">
-                    <div class="team-name home" title="${team1}">${team1}</div>
-                    <div class="score-pod">${status.includes('Post') || status.includes('Canc') ? '-' : s1 + ' - ' + s2}</div>
-                    <div class="team-name" title="${team2}">${team2}</div>
+                    <div class="team-name home" title="${t1}">${t1}</div>
+                    <div class="score-pod">${status.includes('Post') ? '-' : s1 + ' - ' + s2}</div>
+                    <div class="team-name" title="${t2}">${t2}</div>
                 </div>
                 <div class="status-footer">${status === 'TBD' ? 'Pushback: ' + pb : status}</div>
             `;
