@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Witham Hockey Live Scores</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; padding: 20px; }
+        .scoreboard-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #004d2c; position: relative; }
+        .live-badge { position: absolute; top: 10px; right: 10px; background: red; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; animation: blink 1s infinite; font-size: 0.8rem; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .division { font-size: 0.8rem; color: #666; text-transform: uppercase; margin-bottom: 10px; }
+        .team-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
+        .team-name { font-weight: bold; font-size: 1.1rem; }
+        .score { font-size: 1.5rem; font-weight: 800; background: #eee; padding: 5px 12px; border-radius: 6px; min-width: 30px; text-align: center; }
+        .status { margin-top: 15px; text-align: center; font-weight: bold; padding: 5px; border-radius: 5px; }
+        .status-win { color: #28a745; } .status-loss { color: #dc3545; } .status-cancelled { color: #6c757d; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align:center;">Witham Hockey Club Results</h1>
+    <div id="scoreboard" class="scoreboard-container">Loading scores...</div>
+
+    <script>
+        const SHEET_ID = '1O9bkqoDOMFXE0NH6wW7xzQJw1sR3LvMQfXEQbI311yU';
+        // We use the CSV export link for simplicity
+        const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&range=B270:H277`;
+
+        async function fetchScores() {
+            try {
+                const response = await fetch(URL);
+                const data = await response.text();
+                const rows = data.split('\n').map(row => row.split(',').map(cell => cell.replace(/"/g, '')));
+                renderScores(rows);
+            } catch (error) {
+                document.getElementById('scoreboard').innerHTML = "Error loading scores.";
+            }
+        }
+
+        function isMatchLive(pushbackTime, status) {
+            if (status !== "TBD") return false;
+            
+            const now = new Date();
+            const [hours, minutes] = pushbackTime.split(':');
+            const startTime = new Date();
+            startTime.setHours(hours, minutes, 0);
+            
+            const endTime = new Date(startTime.getTime() + 90 * 60000);
+            return now >= startTime && now <= endTime;
+        }
+
+        function renderScores(data) {
+            const container = document.getElementById('scoreboard');
+            container.innerHTML = '';
+
+            // We have 7 columns (L1, L2, M1, M2, M3, M4, M5)
+            for (let col = 0; col < 7; col++) {
+                const display = data[0][col];
+                if (display !== "TRUE") continue;
+
+                const pushback = data[1][col];
+                const status = data[2][col];
+                const withamTeam = data[3][col];
+                const opponent = data[4][col];
+                const withamScore = data[5][col] || '0';
+                const opponentScore = data[6][col] || '0';
+                const division = data[7][col];
+
+                const isLive = isMatchLive(pushback, status);
+                const specialStatus = ["Cancelled", "Abandoned", "Postponed"].includes(status);
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
+                    <div class="division">${division} | PB: ${pushback}</div>
+                    <div class="team-row">
+                        <span class="team-name">${withamTeam}</span>
+                        <span class="score">${specialStatus ? '-' : withamScore}</span>
+                    </div>
+                    <div class="team-row">
+                        <span class="team-name">${opponent}</span>
+                        <span class="score">${specialStatus ? '-' : opponentScore}</span>
+                    </div>
+                    <div class="status status-${status.toLowerCase()}">${status}</div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        fetchScores();
+        setInterval(fetchScores, 60000); // Refresh every minute
+    </script>
+</body>
+</html>
