@@ -7,141 +7,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --witham-gold: #ffc000; --witham-black: #1a1a1a; --bg-light: #f8f9fa; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-light); color: var(--witham-black); overflow-x: hidden; width: 100%; }
 
-        :root {
-            --witham-gold: #ffc000;
-            --witham-black: #1a1a1a;
-            --bg-light: #f8f9fa;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-light);
-            color: var(--witham-black);
-            overflow-x: hidden;
-            width: 100%;
-        }
-
-        /* HEADER - LARGE FLUID TITLE */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 15px 20px;
-            border-bottom: 6px solid var(--witham-gold);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            width: 100%;
-        }
-
+        header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-bottom: 6px solid var(--witham-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; }
         .header-logo img { height: clamp(55px, 7vw, 90px); width: auto; }
-        
         .header-title { flex-grow: 1; text-align: center; padding: 0 10px; }
-
-        .header-title h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            font-size: clamp(1.8rem, 5vw, 3.5rem); 
-            color: var(--witham-black);
-            line-height: 0.9;
-        }
-
+        .header-title h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: -2px; font-size: clamp(1.8rem, 5vw, 3.5rem); color: var(--witham-black); line-height: 0.9; }
         .header-clock { text-align: right; flex-shrink: 0; min-width: 80px; }
         #clock { font-family: 'Montserrat', sans-serif; font-size: clamp(1.4rem, 3vw, 2.4rem); font-weight: 900; line-height: 1; }
         #date { font-size: 0.75rem; font-weight: 800; color: #666; text-transform: uppercase; display: block; margin-top: 2px; }
 
-        /* GRID SYSTEM */
-        .main-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            padding: 25px;
-            width: 100%;
-        }
+        .main-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding: 25px; width: 100%; }
+        @media (min-width: 1200px) { .main-container { grid-template-columns: 1.1fr 1.1fr 0.8fr; } }
 
-        @media (min-width: 1200px) {
-            .main-container { grid-template-columns: 1.1fr 1.1fr 0.8fr; }
-        }
-
-        .column-title {
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 5px solid var(--witham-gold);
-        }
+        .column-title { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 5px solid var(--witham-gold); }
         .column-title h2 { font-family: 'Montserrat', sans-serif; font-size: 1.7rem; text-transform: uppercase; font-weight: 900; letter-spacing: -1px; }
 
-        /* CARDS */
-        .card, .weather-card, .news-card {
-            background: white;
-            border-radius: 12px;
-            padding: 22px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            width: 100%;
-        }
+        .card, .weather-card, .news-card { background: white; border-radius: 12px; padding: 22px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); width: 100%; }
         .card { border-left: 10px solid var(--witham-gold); }
 
-        .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; min-height: 24px; }
         .division { font-size: 0.85rem; color: #777; font-weight: 900; text-transform: uppercase; }
 
-        /* LIVE BADGE STYLE */
-        .live-badge {
-            background: #d93025; color: white;
-            padding: 4px 12px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 900;
-            text-transform: uppercase;
-            animation: slowBreathe 3s ease-in-out infinite;
-        }
+        .live-badge { background: #d93025; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; animation: slowBreathe 3s ease-in-out infinite; }
         @keyframes slowBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* TEAMS & SCORES */
-        .score-row {
-            display: flex; align-items: center; justify-content: center;
-            gap: 12px; width: 100%;
-        }
-
-        .team-name { 
-            font-weight: 800; font-size: clamp(1.1rem, 4vw, 1.5rem); 
-            color: #000; flex: 1; line-height: 1.1; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
-        }
+        .score-row { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; }
+        .team-name { font-weight: 800; font-size: clamp(1.1rem, 4vw, 1.5rem); color: #000; flex: 1; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
         .team-name.home { text-align: right; }
+        .score-pod { background: var(--witham-gold); color: var(--witham-black); font-family: 'Montserrat', sans-serif; font-size: clamp(1.8rem, 5vw, 2.2rem); font-weight: 900; padding: 6px 18px; border-radius: 50px; min-width: 85px; text-align: center; flex-shrink: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .status-footer { font-size: 1.1rem; font-weight: 800; text-align: center; margin-top: 18px; color: #333; text-transform: uppercase; }
 
-        .score-pod {
-            background: var(--witham-gold); color: var(--witham-black);
-            font-family: 'Montserrat', sans-serif;
-            font-size: clamp(1.8rem, 5vw, 2.2rem); 
-            font-weight: 900; padding: 6px 18px;
-            border-radius: 50px; min-width: 85px;
-            text-align: center; flex-shrink: 0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .status-footer { 
-            font-size: 1.1rem; font-weight: 800; text-align: center; 
-            margin-top: 18px; color: #333; text-transform: uppercase;
-        }
-
-        /* WEATHER */
         .weather-desc { font-weight: 800; text-transform: uppercase; color: #666; font-size: 0.95rem; margin-bottom: 5px; display: block; text-align: center; }
         .weather-main { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 5px 0 12px 0; }
         .weather-temp { font-size: 3rem; font-weight: 900; font-family: 'Montserrat'; }
         .weather-icon { font-size: 3rem; }
 
-        /* NEWS CAROUSEL */
-        .carousel-container {
-            width: 100%; height: 300px;
-            position: relative; border-radius: 8px;
-            overflow: hidden; background: #fff;
-        }
-        .carousel-slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0; transition: opacity 0.8s ease-in-out;
-            background-size: contain; background-repeat: no-repeat; background-position: center;
-            display: flex; align-items: flex-end;
-        }
+        .carousel-container { width: 100%; height: 300px; position: relative; border-radius: 8px; overflow: hidden; background: #eee; }
+        .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out; background-size: cover; background-position: center; display: flex; align-items: flex-end; }
         .carousel-slide.active { opacity: 1; }
         .slide-caption { background: rgba(0,0,0,0.7); color: white; padding: 12px; width: 100%; text-align: center; font-weight: 600; font-size: 1rem; }
     </style>
@@ -168,24 +72,29 @@
         <div id="weather-container"></div>
         <div class="column-title" style="margin-top: 25px;"><h2>Club News</h2></div>
         <div class="news-card">
-            <div class="carousel-container" id="carousel">
-                <div class="carousel-slide active" style="background-image: url('https://raw.githubusercontent.com/KilobyteGamer/WHC-Results/refs/heads/main/WHC_Eagle.png');">
-                    <div class="slide-caption">Welcome to Witham Hockey Club</div>
-                </div>
-            </div>
+            <div class="carousel-container" id="carousel"></div>
         </div>
     </div>
 </div>
 
 <script>
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbycpvfVi8Yd3Us0Fp84SON-wyxN0NL6b_3adE-cnYoomk0Cb0IsuPt2tF9RjdScB_TN/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwwha50rOkENfhlASw6QD_5m-aqC2y2wSSYuVmst2SgSNmvTjFEUR5GatQT_I8TvTAl/exec';
 
+    // Clock Logic
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        document.getElementById('date').textContent = now.toLocaleDateString([], {weekday: 'long', day: 'numeric', month: 'short'});
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    // Weather Logic
     async function updateWeather() {
         try {
             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=51.8033&longitude=0.6386&current_weather=true&timezone=Europe%2FLondon`);
             const d = await res.json();
             const w = d.current_weather;
-            const icons = { 0: '☀️', 1: '⛅', 2: '⛅', 3: '☁️', 45: '☁️', 48: '☁️', 51: '🌧️', 61: '🌧️', 80: '🌦️' };
+            const icons = { 0: '☀️', 1: '⛅', 2: '⛅', 3: '☁️', 61: '🌧️', 80: '🌦️' };
             const descs = { 0: 'Clear Sky', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast', 61: 'Rainy' };
             document.getElementById('weather-container').innerHTML = `
                 <div class="weather-card">
@@ -194,56 +103,86 @@
                         <span class="weather-icon">${icons[w.weathercode] || '☁️'}</span>
                         <span class="weather-temp">${Math.round(w.temperature)}°C</span>
                     </div>
-                    <div style="font-size:0.95rem; font-weight:800; color:#888; border-top:1px solid #eee; padding-top:12px; text-align:center; text-transform:uppercase;">
-                        Witham | ${Math.round(w.windspeed * 0.621)} mph Wind
-                    </div>
                 </div>`;
         } catch (e) {}
     }
     updateWeather(); setInterval(updateWeather, 600000);
 
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        document.getElementById('date').textContent = now.toLocaleDateString([], {weekday: 'long', day: 'numeric', month: 'short'});
-    }
-    setInterval(updateClock, 1000); updateClock();
-
+    // Data Handling
     function handleData(data) {
+        if (!data || data.error) { console.error("Script Error:", data ? data.error : "No data"); return; }
+
         const mens = document.getElementById('mens-scores');
         const ladies = document.getElementById('ladies-scores');
         mens.innerHTML = ''; ladies.innerHTML = '';
         
-        for (let col = 0; col < 7; col++) {
-            if (data[0][col] !== true && data[0][col] !== "TRUE") continue;
-            const [pb, status, t1, t2, s1, s2, div] = [data[1][col], data[2][col], data[3][col], data[4][col], data[5][col] ?? '0', data[6][col] ?? '0', data[7][col]];
-            
-            // Logic for Live Playing Badge
-            let isPlaying = false;
-            if (status === "TBD" && pb) {
-                const now = new Date();
-                const [hrs, mins] = pb.split(':');
-                const mt = new Date(); mt.setHours(hrs, mins, 0);
-                if (now >= mt && now <= new Date(mt.getTime() + 5400000)) isPlaying = true;
-            }
+        // 1. PROCESS FIXTURES
+        if (data.fixtures) {
+            const f = data.fixtures;
+            for (let col = 0; col < f[0].length; col++) {
+                const show = String(f[0][col]).toUpperCase() === "TRUE";
+                if (!show) continue;
 
-            const isLadies = t1.toLowerCase().includes(' l') || t1.includes('Ladies');
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="card-header-row">
-                    <div class="division">${div}</div>
-                    ${isPlaying ? '<div class="live-badge">Playing</div>' : '<div></div>'}
-                </div>
-                <div class="score-row">
-                    <div class="team-name home" title="${t1}">${t1}</div>
-                    <div class="score-pod">${status.includes('Post') ? '-' : s1 + ' - ' + s2}</div>
-                    <div class="team-name" title="${t2}">${t2}</div>
-                </div>
-                <div class="status-footer">${status === 'TBD' ? 'Pushback: ' + pb : status}</div>
-            `;
-            (isLadies ? ladies : mens).appendChild(card);
+                const pb = f[1][col];
+                const status = f[2][col];
+                const t1 = f[3][col];
+                const t2 = f[4][col];
+                const s1 = f[5][col] || "0";
+                const s2 = f[6][col] || "0";
+                const div = f[7][col];
+
+                let isPlaying = false;
+                if (status === "TBD" && pb.includes(':')) {
+                    const now = new Date();
+                    const parts = pb.split(':');
+                    const mt = new Date();
+                    mt.setHours(parseInt(parts[0]), parseInt(parts[1]), 0);
+                    if (now >= mt && now <= new Date(mt.getTime() + 6000000)) isPlaying = true;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-header-row"><div class="division">${div}</div>${isPlaying ? '<div class="live-badge">Playing</div>' : '<div></div>'}</div>
+                    <div class="score-row">
+                        <div class="team-name home">${t1}</div>
+                        <div class="score-pod">${(status.includes('Post') || status.includes('Canc')) ? '-' : s1 + ' - ' + s2}</div>
+                        <div class="team-name">${t2}</div>
+                    </div>
+                    <div class="status-footer">${status === 'TBD' ? 'Pushback: ' + pb : status}</div>`;
+                
+                (t1.toLowerCase().includes(' l') || t1.toLowerCase().includes('ladies')) ? ladies.appendChild(card) : mens.appendChild(card);
+            }
         }
+
+        // 2. PROCESS NEWS
+        const carousel = document.getElementById('carousel');
+        carousel.innerHTML = '';
+        if (data.news && data.news.length > 0) {
+            data.news.forEach((item, index) => {
+                const slide = document.createElement('div');
+                slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
+                slide.style.backgroundImage = `url('${item[1]}')`;
+                slide.innerHTML = `<div class="slide-caption">${item[0]}</div>`;
+                carousel.appendChild(slide);
+            });
+            startCarousel();
+        } else {
+            carousel.innerHTML = '<div class="carousel-slide active"><div class="slide-caption">Welcome to Witham HC</div></div>';
+        }
+    }
+
+    let carouselInterval;
+    function startCarousel() {
+        if (carouselInterval) clearInterval(carouselInterval);
+        let currentSlide = 0;
+        carouselInterval = setInterval(() => {
+            const slides = document.querySelectorAll('.carousel-slide');
+            if(slides.length < 2) return;
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 6000);
     }
 
     function refresh() {
