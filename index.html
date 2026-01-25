@@ -5,93 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Witham Hockey Live Scores</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f9; padding: 20px; }
-        .scoreboard-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #004d2c; position: relative; }
-        .live-badge { position: absolute; top: 10px; right: 10px; background: red; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; animation: blink 1s infinite; font-size: 0.8rem; }
+        :root { --witham-green: #004d2c; --witham-gold: #ffcc00; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #ececec; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: var(--witham-green); text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        
+        .scoreboard-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 1200px; }
+        
+        .card { background: white; border-radius: 12px; width: 300px; padding: 20px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-top: 6px solid var(--witham-green); position: relative; transition: transform 0.2s; }
+        .card:hover { transform: translateY(-5px); }
+
+        .live-badge { position: absolute; top: 10px; right: 10px; background: #ff0000; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
-        .division { font-size: 0.8rem; color: #666; text-transform: uppercase; margin-bottom: 10px; }
-        .team-row { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
-        .team-name { font-weight: bold; font-size: 1.1rem; }
-        .score { font-size: 1.5rem; font-weight: 800; background: #eee; padding: 5px 12px; border-radius: 6px; min-width: 30px; text-align: center; }
-        .status { margin-top: 15px; text-align: center; font-weight: bold; padding: 5px; border-radius: 5px; }
-        .status-win { color: #28a745; } .status-loss { color: #dc3545; } .status-cancelled { color: #6c757d; font-style: italic; }
+
+        .division { font-size: 0.75rem; color: #777; font-weight: bold; text-transform: uppercase; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .team-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; }
+        .team-name { font-weight: 600; color: #333; font-size: 1.05rem; flex: 1; }
+        .score { background: #333; color: white; padding: 6px 12px; border-radius: 6px; font-size: 1.2rem; font-weight: bold; min-width: 25px; text-align: center; }
+
+        .status-footer { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ddd; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        .status-tbd { color: #666; }
+        .status-win { color: #28a745; }
+        .status-loss { color: #dc3545; }
+        .status-cancelled { color: #999; font-style: italic; }
+
+        #debug-log { margin-top: 40px; font-size: 10px; color: #888; font-family: monospace; background: #fff; padding: 10px; border-radius: 5px; width: 80%; max-width: 600px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align:center;">Witham Hockey Club Results</h1>
-    <div id="scoreboard" class="scoreboard-container">Loading scores...</div>
+    <h1>Witham Hockey Club Results</h1>
+    
+    <div id="scoreboard" class="scoreboard-container">
+        <p>Loading matches...</p>
+    </div>
+
+    <div id="debug-log">Log initialized...</div>
 
     <script>
-        const SHEET_ID = '1O9bkqoDOMFXE0NH6wW7xzQJw1sR3LvMQfXEQbI311yU';
-        // We use the CSV export link for simplicity
-        const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&range=B270:H277`;
+        // PASTE YOUR NEW WEB APP URL HERE
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbycpvfVi8Yd3Us0Fp84SON-wyxN0NL6b_3adE-cnYoomk0Cb0IsuPt2tF9RjdScB_TN/exec';
 
-        async function fetchScores() {
-            try {
-                const response = await fetch(URL);
-                const data = await response.text();
-                const rows = data.split('\n').map(row => row.split(',').map(cell => cell.replace(/"/g, '')));
-                renderScores(rows);
-            } catch (error) {
-                document.getElementById('scoreboard').innerHTML = "Error loading scores.";
-            }
-        }
+        const log = (msg) => {
+            document.getElementById('debug-log').innerHTML += `<br>> ${msg}`;
+        };
 
-        function isMatchLive(pushbackTime, status) {
-            if (status !== "TBD") return false;
-            
-            const now = new Date();
-            const [hours, minutes] = pushbackTime.split(':');
-            const startTime = new Date();
-            startTime.setHours(hours, minutes, 0);
-            
-            const endTime = new Date(startTime.getTime() + 90 * 60000);
-            return now >= startTime && now <= endTime;
-        }
-
-        function renderScores(data) {
+        // This is the function the Google Script calls back to
+        function handleData(data) {
+            log("Data received from Google! Rendering...");
             const container = document.getElementById('scoreboard');
             container.innerHTML = '';
 
-            // We have 7 columns (L1, L2, M1, M2, M3, M4, M5)
+            // Grid structure: Row 0=Display?, 1=PB, 2=Status, 3=Team1, 4=Team2, 5=Score1, 6=Score2, 7=Div
             for (let col = 0; col < 7; col++) {
-                const display = data[0][col];
-                if (display !== "TRUE") continue;
+                const showMatch = data[0][col];
+                if (showMatch !== true && showMatch !== "TRUE") continue;
 
-                const pushback = data[1][col];
+                const pb = data[1][col];
                 const status = data[2][col];
-                const withamTeam = data[3][col];
-                const opponent = data[4][col];
-                const withamScore = data[5][col] || '0';
-                const opponentScore = data[6][col] || '0';
-                const division = data[7][col];
+                const team1 = data[3][col];
+                const team2 = data[4][col];
+                const s1 = data[5][col] ?? '-';
+                const s2 = data[6][col] ?? '-';
+                const div = data[7][col];
 
-                const isLive = isMatchLive(pushback, status);
-                const specialStatus = ["Cancelled", "Abandoned", "Postponed"].includes(status);
+                // Logic for "Live" Indicator
+                let isLive = false;
+                if (status === "TBD") {
+                    const now = new Date();
+                    const [hrs, mins] = pb.split(':');
+                    const matchTime = new Date();
+                    matchTime.setHours(hrs, mins, 0);
+                    const endTime = new Date(matchTime.getTime() + (90 * 60000));
+                    if (now >= matchTime && now <= endTime) isLive = true;
+                }
+
+                const isSpecial = ["Cancelled", "Abandoned", "Postponed"].includes(status);
 
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
                     ${isLive ? '<div class="live-badge">LIVE</div>' : ''}
-                    <div class="division">${division} | PB: ${pushback}</div>
+                    <div class="division">${div}</div>
                     <div class="team-row">
-                        <span class="team-name">${withamTeam}</span>
-                        <span class="score">${specialStatus ? '-' : withamScore}</span>
+                        <span class="team-name">${team1}</span>
+                        <span class="score">${isSpecial ? '-' : s1}</span>
                     </div>
                     <div class="team-row">
-                        <span class="team-name">${opponent}</span>
-                        <span class="score">${specialStatus ? '-' : opponentScore}</span>
+                        <span class="team-name">${team2}</span>
+                        <span class="score">${isSpecial ? '-' : s2}</span>
                     </div>
-                    <div class="status status-${status.toLowerCase()}">${status}</div>
+                    <div class="status-footer status-${status.toLowerCase()}">
+                        ${status === 'TBD' ? 'Pushback: ' + pb : status}
+                    </div>
                 `;
                 container.appendChild(card);
             }
         }
 
-        fetchScores();
-        setInterval(fetchScores, 60000); // Refresh every minute
+        function refreshData() {
+            log("Requesting data...");
+            const oldScript = document.getElementById('data-script');
+            if (oldScript) oldScript.remove();
+
+            const script = document.createElement('script');
+            script.id = 'data-script';
+            script.src = `${WEB_APP_URL}?callback=handleData&ts=${Date.now()}`;
+            document.body.appendChild(script);
+        }
+
+        // Run on load
+        refreshData();
+        // Refresh every 60 seconds
+        setInterval(refreshData, 60000);
     </script>
 </body>
 </html>
