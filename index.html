@@ -21,50 +21,113 @@
         .main-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 20px; width: 100%; }
         @media (min-width: 1200px) { .main-container { grid-template-columns: 1.2fr 1.2fr 0.7fr; } }
 
-        .column-title { margin-bottom: 15px; padding-bottom: 8px; border-bottom: 5px solid var(--witham-gold); }
+        .column-title { margin-bottom: 12px; padding-bottom: 8px; border-bottom: 5px solid var(--witham-gold); }
         .column-title h2 { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; text-transform: uppercase; font-weight: 900; letter-spacing: -1px; }
 
-        .card, .weather-card, .news-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); width: 100%; }
-        .card { border-left: 10px solid var(--witham-gold); }
+        .card { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 10px 15px; 
+            margin-bottom: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); 
+            border-left: 10px solid var(--witham-gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 145px;
+        }
 
-        .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; min-height: 22px; }
-        .division { font-size: 0.85rem; color: #777; font-weight: 900; text-transform: uppercase; }
+        .card-header-row { display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 8px; overflow: hidden; }
+        
+        .venue-pill { 
+            background: #e0e0e0; 
+            color: #666; 
+            padding: 2px 10px; 
+            border-radius: 20px; 
+            font-size: 1rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .division { font-size: 0.75rem; color: #777; font-weight: 800; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .live-badge { background: #d93025; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; animation: slowBreathe 3s ease-in-out infinite; }
-        .awaiting-badge { background: #e0e0e0; color: #666; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
-        @keyframes slowBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-        .score-row { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; margin: 8px 0; }
-        .team-name { font-weight: 800; font-size: clamp(1.3rem, 4vw, 1.6rem); color: #000; flex: 1; line-height: 1.1; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+        .score-row { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            flex-grow: 1;
+            min-width: 0;
+            overflow: visible; /* Prevent clipping of descenders */
+        }
+        
+        .team-name { 
+            font-weight: 800; 
+            font-size: clamp(1.3rem, 3.6vw, 1.7rem); 
+            color: #000; 
+            /* INCREASED LINE HEIGHT & PADDING TO PREVENT LETTER CLIPPING */
+            line-height: 1.2; 
+            padding-bottom: 4px;
+            letter-spacing: -0.5px;
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            flex: 1;
+            /* INCREASED DESKTOP ALLOWANCE */
+            max-width: 200px; 
+            min-width: 0; 
+        }
         .team-name.home { text-align: right; }
         
-        .score-pod { font-family: 'Montserrat', sans-serif; font-size: clamp(1.8rem, 5vw, 2.2rem); font-weight: 900; padding: 6px 18px; border-radius: 50px; min-width: 95px; text-align: center; flex-shrink: 0; box-shadow: 0 4px 8px rgba(0,0,0,0.1); color: var(--witham-black); background: var(--witham-gold); }
+        .score-pod { 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: clamp(1.7rem, 4.5vw, 2.2rem); 
+            font-weight: 900; 
+            padding: 4px 12px; 
+            border-radius: 50px; 
+            min-width: 90px; 
+            text-align: center; 
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1); 
+            color: var(--witham-black); 
+            background: var(--witham-gold); 
+            flex-shrink: 0;
+            margin-bottom: 4px; /* Align visually with team name padding */
+        }
         
-        .status-footer { font-size: 1.1rem; font-weight: 800; text-align: center; margin-top: 15px; display: flex; justify-content: center; }
-        .outcome-pill { padding: 6px 24px; border-radius: 30px; text-transform: uppercase; display: inline-block; letter-spacing: 0.5px; }
+        .status-footer { display: flex; justify-content: center; align-items: center; }
+        .outcome-pill { 
+            padding: 3px 20px; 
+            border-radius: 30px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-size: 1rem; 
+            font-weight: 800; 
+        }
         
+        .live-badge { background: #d93025; color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; animation: slowBreathe 3s ease-in-out infinite; }
+        .awaiting-badge { background: #e0e0e0; color: #666; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; }
+        @keyframes slowBreathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
         .status-win { background-color: var(--win-green); color: white; }
         .status-loss { background-color: var(--loss-red); color: white; }
         .status-draw { background-color: var(--draw-black); color: white; }
         .status-neutral { background-color: var(--neutral-grey); color: white; }
         .status-none { color: #222; background: transparent; }
 
-        .weather-desc { font-weight: 800; text-transform: uppercase; color: #555; font-size: 1.1rem; margin-bottom: 5px; display: block; text-align: center; font-family: 'Inter'; }
+        .weather-card, .news-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .weather-desc { font-weight: 800; text-transform: uppercase; color: #555; font-size: 1.1rem; margin-bottom: 5px; display: block; text-align: center; }
         .weather-main { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 10px 0; }
         .weather-temp { font-size: clamp(2.5rem, 5vw, 3.2rem); font-weight: 900; font-family: 'Montserrat'; }
         .weather-icon { font-size: clamp(2.5rem, 5vw, 3.2rem); }
         .weather-wind { font-size: 0.95rem; font-weight: 800; color: #777; border-top: 1px solid #eee; padding-top: 12px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CAROUSEL - HYBRID 1:1 */
         .carousel-container { width: 100%; padding-top: 100%; position: relative; border-radius: 12px; overflow: hidden; background: #eee; }
         .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; }
         .carousel-slide.active { opacity: 1; }
-        
-        /* Slide with image background */
         .carousel-slide.has-image { background-size: cover; background-position: center; align-items: flex-end; }
         .carousel-slide.has-image .slide-caption { background: rgba(0,0,0,0.75); color: white; padding: 15px; width: 100%; text-align: center; font-weight: 700; font-size: 1.1rem; line-height: 1.3; }
-        
-        /* Text-only slide style */
         .carousel-slide.text-only { background-color: var(--witham-gold); align-items: center; justify-content: center; padding: 25px; }
         .carousel-slide.text-only .slide-content { color: var(--witham-black); font-family: 'Montserrat'; font-weight: 900; font-size: 1.8rem; text-align: center; text-transform: uppercase; line-height: 1.2; letter-spacing: -1px; }
     </style>
@@ -145,10 +208,11 @@
                 const s1 = (f[5][col] === "" || f[5][col] === null) ? "" : String(f[5][col]);
                 const s2 = (f[6][col] === "" || f[6][col] === null) ? "" : String(f[6][col]);
                 const div = f[7][col];
+                const venue = (f[8] && f[8][col]) ? String(f[8][col]) : ""; 
 
                 let statusClass = "status-none";
                 let statusText = (statusUpper === 'TBD' || statusUpper === '') ? 'Pushback: ' + pb : rawStatus;
-                let badgeHTML = '<div></div>';
+                let badgeHTML = '';
                 let scoreDisplay = "-";
 
                 const isAbnormal = statusUpper.includes('POST') || statusUpper.includes('CANC') || statusUpper.includes('ABAN');
@@ -176,7 +240,13 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
-                    <div class="card-header-row"><div class="division">${div}</div>${badgeHTML}</div>
+                    <div class="card-header-row">
+                        <div class="header-left">
+                            ${venue ? `<span class="venue-pill">${venue}</span>` : ''}
+                            <div class="division">${div}</div>
+                        </div>
+                        <div class="header-right">${badgeHTML}</div>
+                    </div>
                     <div class="score-row">
                         <div class="team-name home" title="${t1}">${t1}</div>
                         <div class="score-pod">${scoreDisplay}</div>
@@ -197,8 +267,6 @@
                 const text = item[0];
                 const imgUrl = item[1] ? String(item[1]).trim() : "";
                 const slide = document.createElement('div');
-                
-                // Hybrid Logic: Check if Image URL is provided
                 if (imgUrl && imgUrl.length > 5) {
                     slide.className = `carousel-slide has-image ${index === 0 ? 'active' : ''}`;
                     slide.style.backgroundImage = `url('${imgUrl}')`;
@@ -225,7 +293,7 @@
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active');
-        }, 10000);
+        }, 6000);
     }
 
     function refresh() {
